@@ -157,6 +157,7 @@ type Body struct {
 	Sound    string `json:"sound,omitempty"`
 	TTL      int    `json:"ttl,omitempty"`
 	Device   string `json:"device,omitempty"`
+	Url      string `json:"url,omitempty"`
 }
 
 // buildRequestBody builds the request body for the provider
@@ -196,6 +197,7 @@ func (provider *AlertProvider) buildRequestBody(cfg *Config, ep *endpoint.Endpoi
 		Sound:    cfg.Sound,
 		TTL:      cfg.TTL,
 		Device:   cfg.Device,
+		Url:      ep.URL,
 	})
 	return body
 }

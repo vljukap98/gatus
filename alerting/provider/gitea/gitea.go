@@ -181,12 +181,23 @@ func (provider *AlertProvider) buildIssueBody(ep *endpoint.Endpoint, alert *aler
 			formattedConditionResults += fmt.Sprintf("- %s - `%s`\n", prefix, conditionResult.Condition)
 		}
 	}
+	// custom logic for errors
+	var errorStrings string
+	if len(result.Errors) > 0 {
+		errorStrings = "\n\n## Errors\n"
+		errorStrings += "```"
+		for _, errStr := range result.Errors {
+			errorStrings += fmt.Sprintf("\n%s", errStr)
+		}
+		errorStrings += "\n```"
+	}
+
 	var description string
 	if alertDescription := alert.GetDescription(); len(alertDescription) > 0 {
-		description = ":\n> " + alertDescription
+		description = ":\n " + alertDescription
 	}
 	message := fmt.Sprintf("An alert for **%s** has been triggered due to having failed %d time(s) in a row", ep.DisplayName(), alert.FailureThreshold)
-	return message + description + formattedConditionResults
+	return message + description + formattedConditionResults + errorStrings
 }
 
 // GetDefaultAlert returns the provider's default alert configuration

@@ -179,6 +179,9 @@ func (provider *AlertProvider) buildRequestBody(cfg *Config, ep *endpoint.Endpoi
 		}
 		formattedConditionResults += fmt.Sprintf("\n%s - %s", prefix, conditionResult.Condition)
 	}
+	for _, errStr := range result.Errors {
+		formattedConditionResults += fmt.Sprintf("\n%s - %s", "❌", errStr)
+	}
 	if len(alert.GetDescription()) > 0 {
 		message += " with the following description: " + alert.GetDescription()
 	}

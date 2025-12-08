@@ -11,10 +11,10 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o gatus .
 #RUN go test ./... -mod vendor
 
 # Run the binary on an empty container
-FROM scratch
+FROM alpine:latest
 COPY --from=builder /app/gatus .
 COPY --from=builder /app/config.yaml ./config/config.yaml
-COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+# COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 ENV GATUS_CONFIG_PATH=""
 ENV GATUS_LOG_LEVEL="INFO"
 ENV PORT="8080"

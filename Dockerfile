@@ -2,7 +2,9 @@
 FROM golang:alpine AS builder
 # RUN apk --update add ca-certificates
 WORKDIR /app
+
 COPY . ./
+
 RUN go mod tidy
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o gatus .
 
@@ -12,13 +14,18 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o gatus .
 
 # Run the binary on an empty container
 FROM alpine:latest
+
+# https://docs.docker.com/engine/network/ca-certs/#add-certificates-to-images
 RUN apk add --no-cache ca-certificates
 RUN update-ca-certificates
+
 COPY --from=builder /app/gatus .
 COPY --from=builder /app/config.yaml ./config/config.yaml
 # COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+
 ENV GATUS_CONFIG_PATH=""
 ENV GATUS_LOG_LEVEL="INFO"
 ENV PORT="8080"
+
 EXPOSE ${PORT}
 ENTRYPOINT ["/gatus"]

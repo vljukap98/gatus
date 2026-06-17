@@ -4,8 +4,7 @@ FROM golang:alpine AS builder
 WORKDIR /app
 
 COPY . ./
-
-RUN go mod tidy
+RUN go mod tidy -diff
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o gatus .
 
 # Run Tests inside docker image if you don't have a configured go environment
